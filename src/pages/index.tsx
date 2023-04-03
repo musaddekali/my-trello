@@ -1,7 +1,15 @@
-import { Form, Input } from 'antd'
-import Head from 'next/head'
+import { useState } from "react";
+import { Form, Input, Button, Checkbox, Switch, Radio,Select } from "antd";
+import Head from "next/head";
 
 export default function Home() {
+  const [data, setData] = useState("hello all data");
+  const [form] = Form.useForm();
+
+  const onFinish = (values: any) => {
+    console.log("Success:", values);
+  };
+
   return (
     <>
       <Head>
@@ -10,25 +18,92 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main >
-       <div className="container">
-        <div className="grid lg:grid-cols-5 md:grid-cols-2 gap-4">
-         {Array.from({length: 5}).map((item , i) => {
-           return (
-            <div key={i} className='h-40 bg-blue-300 grid place-items-center rounded-lg shadow-md hover:bg-blue-500 transition duration-200 cursor-pointer'>
-              <h1 className='text-lg font-bold text-teal-700 border-b-4 hover:border-b-red-400 cursor-pointer'>Hi, I'm Mahid</h1>
-            </div>
-           )
-         })}
+      <main>
+        <div className="container">
+          {/* form  */}
+          <div className="mt-5 w-1/2 mx-auto shadow p-4 rounded-md">
+            <Form
+              form={form}
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+              layout="vertical"
+            >
+              <Form.Item
+                label="User Name"
+                name="username"
+                validateStatus="validating"
+                rules={[
+                  { required: true, message: "Please input your username!" },
+                ]}
+              >
+                <Input
+                  className="p-3 text-base"
+                  placeholder="Enter Your Name"
+                />
+              </Form.Item>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  { required: true, message: "Please input your email!" },
+                ]}
+              >
+                <Input
+                  className="p-3 text-base"
+                  placeholder="Enter Your Email"
+                />
+              </Form.Item>
+              <Form.Item name="remember_me" valuePropName="checked">
+                <Checkbox
+                  onChange={(e) =>
+                    form.setFieldsValue({ remember_me: e.target.checked })
+                  }
+                >
+                  Remember my all data
+                </Checkbox>
+              </Form.Item>
+              <Form.Item name="save_password" valuePropName="checked">
+                <Checkbox
+                  onChange={(e) =>
+                    form.setFieldsValue({ save_password: e.target.checked })
+                  }
+                >
+                  Save my password
+                </Checkbox>
+              </Form.Item>
+              <Form.Item
+                name="switch_me"
+                label="Active switch"
+                valuePropName="checked"
+              >
+                <Switch className="bg-gray-400" />
+              </Form.Item>
+              <Form.Item name="fruit_name" label="Select fruit name">
+                <Radio.Group>
+                  <Radio value="apple"> Apple </Radio>
+                  <Radio value="pear"> Pear </Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item  initialValue="in" label="Select country" name="country_name">
+                <Select size="large">
+                  <Select.Option value="bd">Bangladesh</Select.Option>
+                  <Select.Option value="in">India</Select.Option>
+                  <Select.Option value="us">USA</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  className="bg-blue-500 hover:bg-blue-600 h-12 text-base min-w-[100px]"
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
         </div>
-        {/* form  */}
-        <Form>
-          <Form.Item>
-            <Input placeholder='Enter Your Name'/>
-          </Form.Item>
-        </Form>
-       </div>
       </main>
     </>
-  )
+  );
 }
