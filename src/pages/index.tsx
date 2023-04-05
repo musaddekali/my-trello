@@ -1,13 +1,31 @@
-import { useState } from "react";
-import { Form, Input, Button, Checkbox, Switch, Radio,Select } from "antd";
+import { FunctionComponent, useState } from "react";
+import { Form, Input, Button, Checkbox } from "antd";
 import Head from "next/head";
+import { v4 as uuidv4 } from "uuid";
+
+type Data = {
+  id: string;
+  text: string;
+  isDone: boolean;
+  isEdit: boolean;
+};
 
 export default function Home() {
-  const [data, setData] = useState("hello all data");
+  const [data, setData] = useState<Data[]>([]);
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const addData = (values: { text: string }) => {
+    setData([
+      ...data,
+      {
+        id: uuidv4(),
+        ...values,
+        isDone: false,
+        isEdit: false,
+      },
+    ]);
+
+    form.resetFields();
   };
 
   return (
@@ -20,90 +38,65 @@ export default function Home() {
       </Head>
       <main>
         <div className="container">
-          {/* form  */}
+          {/* Form  */}
           <div className="mt-5 w-1/2 mx-auto shadow p-4 rounded-md">
-            <Form
-              form={form}
-              initialValues={{ remember: true }}
-              onFinish={onFinish}
-              layout="vertical"
-            >
+            <Form form={form} onFinish={addData} layout="vertical">
               <Form.Item
-                label="User Name"
-                name="username"
-                validateStatus="validating"
-                rules={[
-                  { required: true, message: "Please input your username!" },
-                ]}
+                rules={[{ required: true, message: "Please insert some text" }]}
+                name="text"
+                label="Add new item"
               >
-                <Input
-                  className="p-3 text-base"
-                  placeholder="Enter Your Name"
-                />
+                <Input size="large" placeholder="Add new item..." />
               </Form.Item>
-              <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                  { required: true, message: "Please input your email!" },
-                ]}
-              >
-                <Input
-                  className="p-3 text-base"
-                  placeholder="Enter Your Email"
-                />
-              </Form.Item>
-              <Form.Item name="remember_me" valuePropName="checked">
-                <Checkbox
-                  onChange={(e) =>
-                    form.setFieldsValue({ remember_me: e.target.checked })
-                  }
-                >
-                  Remember my all data
-                </Checkbox>
-              </Form.Item>
-              <Form.Item name="save_password" valuePropName="checked">
-                <Checkbox
-                  onChange={(e) =>
-                    form.setFieldsValue({ save_password: e.target.checked })
-                  }
-                >
-                  Save my password
-                </Checkbox>
-              </Form.Item>
-              <Form.Item
-                name="switch_me"
-                label="Active switch"
-                valuePropName="checked"
-              >
-                <Switch className="bg-gray-400" />
-              </Form.Item>
-              <Form.Item name="fruit_name" label="Select fruit name">
-                <Radio.Group>
-                  <Radio value="apple"> Apple </Radio>
-                  <Radio value="pear"> Pear </Radio>
-                </Radio.Group>
-              </Form.Item>
-              <Form.Item  initialValue="in" label="Select country" name="country_name">
-                <Select size="large">
-                  <Select.Option value="bd">Bangladesh</Select.Option>
-                  <Select.Option value="in">India</Select.Option>
-                  <Select.Option value="us">USA</Select.Option>
-                </Select>
-              </Form.Item>
-              <Form.Item>
+              <Form.Item className="mb-0">
                 <Button
-                  className="bg-blue-500 hover:bg-blue-600 h-12 text-base min-w-[100px]"
+                  size="large"
+                  className="bg-blue-500 hover:bg-blue-600"
                   type="primary"
                   htmlType="submit"
                 >
-                  Submit
+                  Add
                 </Button>
               </Form.Item>
             </Form>
+          </div>
+          {/* End form  */}
+          <div className="data_list mt-10">
+            <CheckLists allData={data} />
           </div>
         </div>
       </main>
     </>
   );
 }
+
+const CheckLists = ({ allData }: any) => {
+  return (
+    <ul className="flex flex-col gap-3">
+      {allData?.length > 0 ? (
+        allData.map((item: Data) => {
+          return <ListItem key={item.id} data={item} />;
+        })
+      ) : (
+        <h4 className="p-4 bg-orange-500 text-white text-lg text-center rounded-md shadow-lg">
+          No Data available
+        </h4>
+      )}
+    </ul>
+  );
+};
+
+const ListItem = ({ data }: any) => {
+  const { id, text } = data;
+  return (
+    <li className="data_list_item p-4 rounded-md shadow">
+      <div className="flex items-center gap-2">
+        <Checkbox />
+        <p>{text}</p>
+      </div>
+      <small>
+        <strong>ID</strong>: {id}
+      </small>
+    </li>
+  );
+};
