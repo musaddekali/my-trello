@@ -1,5 +1,6 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, Ref, useEffect, useRef, useState } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import Head from "next/head";
 import { v4 as uuidv4 } from "uuid";
 
@@ -16,17 +17,27 @@ export default function Home() {
 
   const addData = (values: { text: string }) => {
     setData([
-      ...data,
       {
         id: uuidv4(),
         ...values,
         isDone: false,
         isEdit: false,
       },
+      ...data,
     ]);
 
     form.resetFields();
   };
+
+  function updateData(dataId: string, key: string, value: string | boolean) {
+    let updatedData = data.map((item) => {
+      if (item.id === dataId) {
+        item[key] = value;
+      }
+      return item;
+    });
+    setData(updatedData);
+  }
 
   return (
     <>
@@ -46,7 +57,7 @@ export default function Home() {
                 name="text"
                 label="Add new item"
               >
-                <Input size="large" placeholder="Add new item..." />
+                <Input.TextArea size="large" placeholder="Add new item..." />
               </Form.Item>
               <Form.Item className="mb-0">
                 <Button
@@ -62,7 +73,7 @@ export default function Home() {
           </div>
           {/* End form  */}
           <div className="data_list mt-10">
-            <CheckLists allData={data} />
+            <CheckLists updateData={updateData} allData={data} />
           </div>
         </div>
       </main>
@@ -70,12 +81,12 @@ export default function Home() {
   );
 }
 
-const CheckLists = ({ allData }: any) => {
+const CheckLists = ({ allData, updateData }: any) => {
   return (
     <ul className="flex flex-col gap-3">
       {allData?.length > 0 ? (
         allData.map((item: Data) => {
-          return <ListItem key={item.id} data={item} />;
+          return <ListItem updateData={updateData} key={item.id} data={item} />;
         })
       ) : (
         <h4 className="p-4 bg-orange-500 text-white text-lg text-center rounded-md shadow-lg">
@@ -86,17 +97,51 @@ const CheckLists = ({ allData }: any) => {
   );
 };
 
-const ListItem = ({ data }: any) => {
-  const { id, text } = data;
+const ListItem = ({ data, updateData }: any) => {
+  const { id, text, isDone, isEdit } = data;
+  const editField = useRef<any>(null);
+
+  useEffect(() => {
+    if (isEdit) {
+      editField.current?.focus();
+    } else {
+      editField.current?.blur();
+    }
+  }, [isEdit]);
+
   return (
     <li className="data_list_item p-4 rounded-md shadow">
-      <div className="flex items-center gap-2">
-        <Checkbox />
-        <p>{text}</p>
+      <div className="flex gap-2">
+        <Checkbox
+          onChange={(e) => updateData(id, "isDone", e.target.checked)}
+        />
+        {!isEdit ? (
+          <p
+            onClick={() => updateData(id, "isEdit", true)}
+            className={`${isDone ? "line-through" : ""} whitespace-break-spaces cursor-pointer`}
+          >
+            {text}
+          </p>
+        ) : (
+          <div className="w-full">
+            <Input.TextArea
+            className="text-normal"
+              ref={editField}
+              value={text}
+              onChange={(e) => updateData(id, "text", e.target.value)}
+              onBlur={() => updateData(id, "isEdit", false)}
+            />
+            <div className="mt-3 flex gap-3">
+              <Button className="bg-blue-500 hover:bg-blue-600" type="primary">
+                Save
+              </Button>
+              <Button danger onClick={() => updateData(id, "isEdit", false)}>
+                <CloseOutlined />
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
-      <small>
-        <strong>ID</strong>: {id}
-      </small>
     </li>
   );
 };
