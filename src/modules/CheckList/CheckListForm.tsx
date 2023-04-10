@@ -8,7 +8,7 @@ type CheckListFormPropType = {
 const CheckListForm = ({ form, addData }: CheckListFormPropType) => {
   return (
     <>
-      <div className="mt-5 w-1/2 mx-auto shadow p-4 rounded-md">
+      <div className="mt-5 w-full mx-auto shadow p-4 rounded-md">
         <Form form={form} onFinish={addData} layout="vertical">
           <Form.Item
             rules={[{ required: true, message: "Please insert some text" }]}
