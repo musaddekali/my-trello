@@ -24,9 +24,9 @@ type DataType = {
 
 const useCheckList = () => {
   const [data, setData] = useState<DataType[]>([]);
-  const [form] = Form.useForm();
 
   const addData = (values: { text: string }) => {
+    console.log("🚀 ~ file: useCheckList.tsx:30 ~ addData ~ values:", values);
     setData([
       {
         id: uuidv4(),
@@ -37,7 +37,7 @@ const useCheckList = () => {
       ...data,
     ]);
 
-    form.resetFields();
+    // form.resetFields();
   };
 
   function updateBooleanData(dataId: string, value: boolean) {
@@ -50,20 +50,20 @@ const useCheckList = () => {
     setData(updatedData);
   }
 
-  function handleComplete(dataId: string, value: boolean): void {
-    updateBooleanData(dataId, value);
-  }
+  // function handleComplete(dataId: string, value: boolean): void {
+  //   updateBooleanData(dataId, value);
+  // }
 
-  function handleEdit(dataId: string, value: boolean): void {
-    updateBooleanData(dataId, value);
-  }
+  // function handleEdit(dataId: string, value: boolean): void {
+  //   updateBooleanData(dataId, value);
+  // }
 
   function updateData(
     dataId: string,
     key: keyof DataType,
     value: string | boolean
   ) {
-    let updatedData: DataType[] = data.map((item) => {
+    let updatedData: DataType[] = data.map((item:any) => {
       if (item.id === dataId) {
         item[key] = value;
       }
@@ -76,7 +76,6 @@ const useCheckList = () => {
     data,
     addData,
     updateData,
-    form,
   };
 };
 
