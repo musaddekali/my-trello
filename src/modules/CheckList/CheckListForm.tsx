@@ -20,7 +20,6 @@ const CheckListForm = ({ form, addData }: CheckListFormPropType) => {
           <Form.Item className="mb-0">
             <Button
               size="large"
-              className="bg-blue-500 hover:bg-blue-600"
               type="primary"
               htmlType="submit"
             >

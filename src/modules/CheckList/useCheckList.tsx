@@ -27,6 +27,11 @@ const useCheckList = () => {
     form.resetFields();
   };
 
+  function deleteListItem(listId:string) {
+      const remainData = data.filter(item => item.id !== listId);
+      setData(remainData);
+  }
+
   // function handleComplete(dataId: string, value: boolean): void {
   //   updateBooleanData(dataId, value);
   // }
@@ -54,6 +59,7 @@ const useCheckList = () => {
     addData,
     updateData,
     form,
+    deleteListItem
   };
 };
 
