@@ -14,6 +14,7 @@ const CheckList = () => {
           <div className="data_list mt-10">
             {/* Progress bar  */}
             <div className="mb-4 border rounded-md p-3 shadow">
+              <span className="text-teal-700">Progress :)</span>
               <Progress
                 strokeColor={{ "0%": "#108ee9", "100%": "#87d068" }}
                 percent={totalCompleted}
