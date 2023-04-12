@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 type DataType = {
@@ -11,7 +11,19 @@ type DataType = {
 
 const useCheckList = () => {
   const [data, setData] = useState<DataType[]>([]);
+  const [totalCompleted, setTotalCompleted] = useState<number>(0)
   const [form] = Form.useForm();
+
+  function getComplitedPercent() {
+    const totalData: number = data.length;
+    const doneData: DataType[] = data.filter((item) => item.isDone);
+    const percent: number =  doneData.length * (100 / totalData);
+    setTotalCompleted(Math.floor(percent));
+  }
+
+  useEffect(() => {
+    getComplitedPercent();
+  }, [data]);
 
   const addData = (values: { text: string }) => {
     setData([
@@ -27,18 +39,10 @@ const useCheckList = () => {
     form.resetFields();
   };
 
-  function deleteListItem(listId:string) {
-      const remainData = data.filter(item => item.id !== listId);
-      setData(remainData);
+  function deleteListItem(listId: string) {
+    const remainData = data.filter((item) => item.id !== listId);
+    setData(remainData);
   }
-
-  // function handleComplete(dataId: string, value: boolean): void {
-  //   updateBooleanData(dataId, value);
-  // }
-
-  // function handleEdit(dataId: string, value: boolean): void {
-  //   updateBooleanData(dataId, value);
-  // }
 
   function updateData(
     dataId: string,
@@ -59,7 +63,8 @@ const useCheckList = () => {
     addData,
     updateData,
     form,
-    deleteListItem
+    deleteListItem,
+    totalCompleted
   };
 };
 
