@@ -5,6 +5,8 @@ import { useEffect, useRef } from "react";
 const ListItem = ({ data, updateData, deleteListItem }: any) => {
   const { id, text, isDone, isEdit } = data;
   const editField = useRef<any>(null);
+  const listTextRef = useRef<any>(null)
+  console.log("🚀 ~ file: ListItem.tsx:9 ~ ListItem ~ listTextRef:", listTextRef?.current?.scrollHeight)
 
   useEffect(() => {
     if (isEdit) {
@@ -42,6 +44,7 @@ const ListItem = ({ data, updateData, deleteListItem }: any) => {
         />
         {!isEdit ? (
           <p
+            ref={listTextRef}
             onClick={() => updateData(id, "isEdit", true)}
             className={`${
               isDone ? "line-through" : ""
@@ -52,7 +55,8 @@ const ListItem = ({ data, updateData, deleteListItem }: any) => {
         ) : (
           <div className="w-full">
             <Input.TextArea
-              className="text-normal"
+              className="text-normal h-0"
+              style={{height: `${listTextRef?.current?.scrollHeight}px`}}
               ref={editField}
               value={text}
               onChange={(e) => updateData(id, "text", e.target.value)}
