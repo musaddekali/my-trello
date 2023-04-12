@@ -6,7 +6,6 @@ const ListItem = ({ data, updateData, deleteListItem }: any) => {
   const { id, text, isDone, isEdit } = data;
   const editField = useRef<any>(null);
   const listTextRef = useRef<any>(null)
-  console.log("🚀 ~ file: ListItem.tsx:9 ~ ListItem ~ listTextRef:", listTextRef?.current?.scrollHeight)
 
   useEffect(() => {
     if (isEdit) {
