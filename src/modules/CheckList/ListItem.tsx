@@ -54,7 +54,7 @@ const ListItem = ({ data, updateData, deleteListItem }: any) => {
         ) : (
           <div className="w-full">
             <Input.TextArea
-              className="text-normal h-0"
+              className="text-base h-0"
               style={{height: `${listTextRef?.current?.scrollHeight}px`}}
               ref={editField}
               value={text}
