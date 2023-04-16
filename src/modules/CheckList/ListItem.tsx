@@ -40,6 +40,7 @@ const ListItem = ({ data, updateData, deleteListItem }: any) => {
           </Button>
         ) : null}
         <Checkbox
+          checked={isDone}
           onChange={(e) => updateData(id, "isDone", e.target.checked)}
         />
         {!isEdit ? (
