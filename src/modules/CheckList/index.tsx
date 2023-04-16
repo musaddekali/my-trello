@@ -6,6 +6,7 @@ import { Progress } from "antd";
 const CheckList = () => {
   const { form, data, addData, updateData, deleteListItem, totalCompleted } =
     useCheckList();
+    
   return (
     <>
       <div className="container">
@@ -13,13 +14,15 @@ const CheckList = () => {
           <CheckListForm form={form} addData={addData} />
           <div className="data_list mt-10">
             {/* Progress bar  */}
-            <div className="mb-4 border rounded-md p-3 shadow">
-              <span className="text-teal-700">Progress :)</span>
-              <Progress
-                strokeColor={{ "0%": "#108ee9", "100%": "#87d068" }}
-                percent={totalCompleted}
-              />
-            </div>
+            {data.length > 0 && (
+              <div className="mb-4 border rounded-md p-3 shadow">
+                <span className="text-teal-700">Progress :)</span>
+                <Progress
+                  strokeColor={{ "0%": "#108ee9", "100%": "#87d068" }}
+                  percent={totalCompleted}
+                />
+              </div>
+            )}
             {/* End Progress bar  */}
             <CheckLists
               updateData={updateData}
